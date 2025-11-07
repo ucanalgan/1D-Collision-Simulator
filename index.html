@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>1D Collision Simulator</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>1D Collision Simulator</h1>
+
+        <div class="error" id="error"></div>
+
+        <div class="input-section">
+            <p class="instruction">
+                <strong>Welcome!</strong> This simulator calculates elastic collisions between two objects.
+            </p>
+            <p class="instruction">
+                Enter a <strong>positive velocity</strong> for object 1 (moving right) and a <strong>negative velocity</strong> for object 2 (moving left).
+                Recommended: velocities less than 10 m/s.
+            </p>
+
+            <div class="input-group">
+                <label for="v1">Initial velocity of object 1 (m/s):</label>
+                <input type="number" id="v1" step="0.1" placeholder="e.g., 5">
+            </div>
+
+            <div class="input-group">
+                <label for="v2">Initial velocity of object 2 (m/s):</label>
+                <input type="number" id="v2" step="0.1" placeholder="e.g., -5">
+            </div>
+
+            <p class="instruction">
+                Enter <strong>positive masses</strong> for both objects (in kilograms).
+            </p>
+
+            <div class="input-group">
+                <label for="m1">Mass of object 1 (kg):</label>
+                <input type="number" id="m1" step="0.1" min="0.1" placeholder="e.g., 2">
+            </div>
+
+            <div class="input-group">
+                <label for="m2">Mass of object 2 (kg):</label>
+                <input type="number" id="m2" step="0.1" min="0.1" placeholder="e.g., 3">
+            </div>
+
+            <div class="button-group">
+                <button class="simulate-btn" onclick="simulate()">Simulate Collision</button>
+                <button class="reset-btn" onclick="reset()">Reset</button>
+            </div>
+        </div>
+
+        <div class="simulation-area" id="simulationArea">
+            <div class="canvas-container">
+                <div class="color-legend">
+                    <div class="legend-item">
+                        <div class="legend-color" style="background-color: #667eea;"></div>
+                        <span class="legend-label">Object 1</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background-color: #f093fb;"></div>
+                        <span class="legend-label">Object 2</span>
+                    </div>
+                </div>
+                <div class="velocity-board">
+                    <div class="velocity-title">Current Velocities</div>
+                    <div class="velocity-item">
+                        <div class="legend-color" style="background-color: #667eea;"></div>
+                        <span class="velocity-value" id="currentV1">0.00 m/s</span>
+                    </div>
+                    <div class="velocity-item">
+                        <div class="legend-color" style="background-color: #f093fb;"></div>
+                        <span class="velocity-value" id="currentV2">0.00 m/s</span>
+                    </div>
+                </div>
+                <div class="collision-counter">
+                    <div style="font-size: 0.85em; color: #666;">Collisions</div>
+                    <div class="collision-count" id="collisionCount">0</div>
+                </div>
+                <canvas id="canvas"></canvas>
+            </div>
+
+            <div class="results">
+                <h2>Results</h2>
+                <div class="result-row">
+                    <div class="result-item">
+                        <div class="result-label">Object 1 - Initial Velocity</div>
+                        <div class="result-value" id="v1Initial">-</div>
+                    </div>
+                    <div class="result-item">
+                        <div class="result-label">Object 1 - Final Velocity</div>
+                        <div class="result-value" id="v1Final">-</div>
+                    </div>
+                </div>
+                <div class="result-row">
+                    <div class="result-item">
+                        <div class="result-label">Object 2 - Initial Velocity</div>
+                        <div class="result-value" id="v2Initial">-</div>
+                    </div>
+                    <div class="result-item">
+                        <div class="result-label">Object 2 - Final Velocity</div>
+                        <div class="result-value" id="v2Final">-</div>
+                    </div>
+                </div>
+                <div class="result-row">
+                    <div class="result-item">
+                        <div class="result-label">Total Initial Momentum</div>
+                        <div class="result-value" id="pInitial">-</div>
+                    </div>
+                    <div class="result-item">
+                        <div class="result-label">Total Final Momentum</div>
+                        <div class="result-value" id="pFinal">-</div>
+                    </div>
+                </div>
+                <div class="result-row">
+                    <div class="result-item">
+                        <div class="result-label">Total Initial Energy</div>
+                        <div class="result-value" id="eInitial">-</div>
+                    </div>
+                    <div class="result-item">
+                        <div class="result-label">Total Final Energy</div>
+                        <div class="result-value" id="eFinal">-</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

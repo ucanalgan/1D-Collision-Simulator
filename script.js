@@ -1,0 +1,242 @@
+let animationId = null;
+let canvas, ctx;
+let object1, object2;
+let collisionCount = 0;
+
+function showError(message) {
+    const errorDiv = document.getElementById('error');
+    errorDiv.textContent = message;
+    errorDiv.style.display = 'block';
+    setTimeout(() => {
+        errorDiv.style.display = 'none';
+    }, 4000);
+}
+
+function validate() {
+    const v1 = parseFloat(document.getElementById('v1').value);
+    const v2 = parseFloat(document.getElementById('v2').value);
+    const m1 = parseFloat(document.getElementById('m1').value);
+    const m2 = parseFloat(document.getElementById('m2').value);
+
+    if (isNaN(v1) || isNaN(v2) || isNaN(m1) || isNaN(m2)) {
+        showError('Please fill in all fields with valid numbers!');
+        return null;
+    }
+
+    if (m1 <= 0 || m2 <= 0) {
+        showError('Masses must be positive values!');
+        return null;
+    }
+
+    return { v1, v2, m1, m2 };
+}
+
+function calculateCollision(v1, v2, m1, m2) {
+    const v1f = ((m1 - m2) * v1 + 2 * m2 * v2) / (m1 + m2);
+    const v2f = ((m2 - m1) * v2 + 2 * m1 * v1) / (m1 + m2);
+
+    return { v1f, v2f };
+}
+
+function simulate() {
+    const input = validate();
+    if (!input) return;
+
+    const { v1, v2, m1, m2 } = input;
+    const { v1f, v2f } = calculateCollision(v1, v2, m1, m2);
+
+    const pInitial = m1 * v1 + m2 * v2;
+    const pFinal = m1 * v1f + m2 * v2f;
+    const eInitial = 0.5 * m1 * v1 * v1 + 0.5 * m2 * v2 * v2;
+    const eFinal = 0.5 * m1 * v1f * v1f + 0.5 * m2 * v2f * v2f;
+
+    document.getElementById('v1Initial').textContent = v1.toFixed(2) + ' m/s';
+    document.getElementById('v1Final').textContent = v1f.toFixed(2) + ' m/s';
+    document.getElementById('v2Initial').textContent = v2.toFixed(2) + ' m/s';
+    document.getElementById('v2Final').textContent = v2f.toFixed(2) + ' m/s';
+    document.getElementById('pInitial').textContent = pInitial.toFixed(2) + ' kg⋅m/s';
+    document.getElementById('pFinal').textContent = pFinal.toFixed(2) + ' kg⋅m/s';
+    document.getElementById('eInitial').textContent = eInitial.toFixed(2) + ' J';
+    document.getElementById('eFinal').textContent = eFinal.toFixed(2) + ' J';
+
+    document.getElementById('simulationArea').style.display = 'block';
+
+    // Reset collision counter
+    collisionCount = 0;
+    document.getElementById('collisionCount').textContent = '0';
+
+    canvas = document.getElementById('canvas');
+    ctx = canvas.getContext('2d');
+    canvas.width = canvas.offsetWidth;
+    canvas.height = canvas.offsetHeight;
+
+    const size1 = Math.max(20, Math.min(50, m1 * 8));
+    const size2 = Math.max(20, Math.min(50, m2 * 8));
+
+    object1 = {
+        x: canvas.width * 0.25,
+        y: canvas.height / 2,
+        size: size1,
+        velocity: v1 * 10, // Scale for visualization
+        initialVelocity: v1 * 10,
+        mass: m1,
+        color: '#667eea',
+        finalVelocity: v1f * 10
+    };
+
+    object2 = {
+        x: canvas.width * 0.75,
+        y: canvas.height / 2,
+        size: size2,
+        velocity: v2 * 10, // Scale for visualization
+        initialVelocity: v2 * 10,
+        mass: m2,
+        color: '#f093fb',
+        finalVelocity: v2f * 10
+    };
+
+    // Start animation
+    if (animationId) cancelAnimationFrame(animationId);
+    animate();
+}
+
+function animate() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    // Draw center line
+    ctx.strokeStyle = '#ddd';
+    ctx.lineWidth = 2;
+    ctx.setLineDash([5, 5]);
+    ctx.beginPath();
+    ctx.moveTo(canvas.width / 2, 0);
+    ctx.lineTo(canvas.width / 2, canvas.height);
+    ctx.stroke();
+    ctx.setLineDash([]);
+
+    // Calculate distance between objects
+    const distance = Math.abs(object1.x - object2.x);
+
+    // Check relative velocity to see if objects are approaching each other
+    const relativeVelocity = object1.x < object2.x
+        ? object1.velocity - object2.velocity  // object1 on left, approaching if relVel > 0
+        : object2.velocity - object1.velocity; // object1 on right, approaching if relVel > 0
+
+    const isApproaching = relativeVelocity > 0;
+
+    // Check for collision between objects - only if approaching
+    if (distance <= (object1.size + object2.size) / 2 && isApproaching) {
+        // Increment collision counter
+        collisionCount++;
+        document.getElementById('collisionCount').textContent = collisionCount;
+
+        // Recalculate collision with current velocities for dynamic collisions
+        const currentV1 = object1.velocity / 10; // Convert back to m/s
+        const currentV2 = object2.velocity / 10;
+        const result = calculateCollision(currentV1, currentV2, object1.mass, object2.mass);
+
+        object1.velocity = result.v1f * 10;
+        object2.velocity = result.v2f * 10;
+
+        // Separate objects to prevent overlap
+        const overlap = (object1.size + object2.size) / 2 - distance;
+        if (overlap > 0) {
+            if (object1.x < object2.x) {
+                object1.x -= overlap / 2 + 1;
+                object2.x += overlap / 2 + 1;
+            } else {
+                object1.x += overlap / 2 + 1;
+                object2.x -= overlap / 2 + 1;
+            }
+        }
+    }
+
+    // Update positions
+    object1.x += object1.velocity * 0.016;
+    object2.x += object2.velocity * 0.016;
+
+    // Boundary collision detection - keep objects inside canvas
+    // Left wall collision for object 1
+    if (object1.x - object1.size / 2 < 0) {
+        object1.x = object1.size / 2;
+        object1.velocity = -object1.velocity * 0.95; // Reverse with slight energy loss
+    }
+    // Right wall collision for object 1
+    if (object1.x + object1.size / 2 > canvas.width) {
+        object1.x = canvas.width - object1.size / 2;
+        object1.velocity = -object1.velocity * 0.95;
+    }
+
+    // Left wall collision for object 2
+    if (object2.x - object2.size / 2 < 0) {
+        object2.x = object2.size / 2;
+        object2.velocity = -object2.velocity * 0.95;
+    }
+    // Right wall collision for object 2
+    if (object2.x + object2.size / 2 > canvas.width) {
+        object2.x = canvas.width - object2.size / 2;
+        object2.velocity = -object2.velocity * 0.95;
+    }
+
+    // Draw objects
+    drawObject(object1);
+    drawObject(object2);
+
+    // Update velocity board with current velocities
+    const currentV1Display = (object1.velocity / 10).toFixed(2);
+    const currentV2Display = (object2.velocity / 10).toFixed(2);
+    document.getElementById('currentV1').textContent = currentV1Display + ' m/s';
+    document.getElementById('currentV2').textContent = currentV2Display + ' m/s';
+
+    animationId = requestAnimationFrame(animate);
+}
+
+function drawObject(obj) {
+    // Shadow
+    ctx.shadowColor = 'rgba(0, 0, 0, 0.2)';
+    ctx.shadowBlur = 10;
+    ctx.shadowOffsetX = 0;
+    ctx.shadowOffsetY = 5;
+
+    // Square
+    ctx.fillStyle = obj.color;
+    ctx.fillRect(obj.x - obj.size / 2, obj.y - obj.size / 2, obj.size, obj.size);
+
+    ctx.shadowColor = 'transparent';
+
+    // Velocity arrow
+    const arrowLength = 30;
+    const arrowStartX = obj.x + (obj.velocity > 0 ? obj.size / 2 + 10 : -obj.size / 2 - 10);
+    const arrowEndX = arrowStartX + (obj.velocity > 0 ? arrowLength : -arrowLength);
+
+    ctx.strokeStyle = '#333';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(arrowStartX, obj.y);
+    ctx.lineTo(arrowEndX, obj.y);
+    ctx.stroke();
+
+    // Arrow head
+    const headlen = 8;
+    const angle = obj.velocity > 0 ? 0 : Math.PI;
+    ctx.beginPath();
+    ctx.moveTo(arrowEndX, obj.y);
+    ctx.lineTo(arrowEndX - headlen * Math.cos(angle - Math.PI / 6),
+               obj.y - headlen * Math.sin(angle - Math.PI / 6));
+    ctx.lineTo(arrowEndX - headlen * Math.cos(angle + Math.PI / 6),
+               obj.y - headlen * Math.sin(angle + Math.PI / 6));
+    ctx.closePath();
+    ctx.fillStyle = '#333';
+    ctx.fill();
+}
+
+function reset() {
+    document.getElementById('v1').value = '';
+    document.getElementById('v2').value = '';
+    document.getElementById('m1').value = '';
+    document.getElementById('m2').value = '';
+    document.getElementById('simulationArea').style.display = 'none';
+    if (animationId) {
+        cancelAnimationFrame(animationId);
+        animationId = null;
+    }
+}
