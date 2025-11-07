@@ -4,7 +4,7 @@ An interactive web-based physics simulator for visualizing and analyzing one-dim
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-## 🎯 Features
+## Features
 
 - **Real-time Physics Simulation**: Watch objects collide with accurate elastic collision physics
 - **Interactive Controls**: Easily adjust mass and velocity for both objects
@@ -18,7 +18,7 @@ An interactive web-based physics simulator for visualizing and analyzing one-dim
 - **Dark Mode Support**: Automatic dark/light theme based on system preferences
 - **Modern UI**: Clean, professional interface with smooth animations
 
-## 🚀 Demo
+## Demo
 
 Simply open `index.html` in any modern web browser to start the simulation!
 
@@ -31,7 +31,7 @@ The simulator features a clean, professional interface with clear visualization 
 ### Dark Mode
 Automatically adapts to your system's dark mode preference for comfortable viewing.
 
-## 🛠️ Technologies Used
+## Technologies Used
 
 - **HTML5 Canvas**: For rendering animated collision visualizations
 - **Vanilla JavaScript**: Pure JS with no dependencies for physics calculations
@@ -39,7 +39,7 @@ Automatically adapts to your system's dark mode preference for comfortable viewi
 - **Google Fonts**: Space Grotesk font family
 - **Material Icons**: Clean, recognizable icons for UI elements
 
-## 📦 Installation
+## Installation
 
 1. Clone the repository:
 ```bash
@@ -65,7 +65,7 @@ xdg-open index.html
 
 **No build process required!** The simulator runs entirely in the browser.
 
-## 📖 Usage
+## Usage
 
 ### Basic Steps
 
@@ -101,7 +101,7 @@ xdg-open index.html
 - Object 2: mass = 2 kg, velocity = -5 m/s
 - *Result: Velocities are perfectly exchanged!*
 
-## 🔬 Physics Behind the Simulation
+## Physics 
 
 ### Elastic Collision Formulas
 
@@ -143,7 +143,7 @@ The simulator uses **relative velocity** to accurately detect collisions:
 - Prevents duplicate collision detection
 - Handles multiple sequential collisions correctly
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 1d-collision-simulator/
@@ -169,7 +169,7 @@ The simulator uses **relative velocity** to accurately detect collisions:
 - Collision detection with relative velocity
 - Wall boundary handling
 
-## 🎨 UI Features
+## UI Features
 
 ### Color Coding
 - **Object 1**: Cyan (`#17A2B8`)
@@ -184,7 +184,7 @@ The simulator uses **relative velocity** to accurately detect collisions:
 ### Dark Mode
 Automatically detects system preferences using `prefers-color-scheme`.
 
-## 🧪 Technical Details
+## Technical Details
 
 ### Performance
 - 60 FPS animation using `requestAnimationFrame`
@@ -202,26 +202,7 @@ Automatically detects system preferences using `prefers-color-scheme`.
 - All fields must contain valid numbers
 - User-friendly error messages
 
-## 🤝 Contributing
-
-Contributions are welcome! Here's how you can help:
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
-
-### Ideas for Contributions
-- [ ] Add coefficient of restitution slider (elastic to inelastic)
-- [ ] Implement velocity-time graphs
-- [ ] Add preset collision scenarios
-- [ ] Export simulation data as CSV
-- [ ] Add pause/resume functionality
-- [ ] Multiple object collisions (3+ objects)
-- [ ] Add sound effects on collision
-
-## 📝 License
+## License
 
 This project is licensed under the MIT License - see below for details:
 
@@ -251,7 +232,7 @@ SOFTWARE.
 
 
 
-## 📧 Contact
+## Contact
 
 Project Link: [https://github.com/ucanalgan/1d-collision-simulator](https://github.com/ucanalgan/1D-Collision-Simulator)
 
