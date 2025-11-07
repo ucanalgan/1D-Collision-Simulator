@@ -3,6 +3,7 @@
 An interactive web-based physics simulator for visualizing and analyzing one-dimensional elastic collisions between two objects. Built with vanilla JavaScript and modern UI design using Tailwind CSS.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Live Demo](https://img.shields.io/badge/demo-live-brightgreen.svg)](https://ucanalgan.github.io/1D-Collision-Simulator/)
 
 ## Features
 
@@ -20,7 +21,9 @@ An interactive web-based physics simulator for visualizing and analyzing one-dim
 
 ## Demo
 
-Simply open `index.html` in any modern web browser to start the simulation!
+🌐 **[Live Demo](https://ucanalgan.github.io/1D-Collision-Simulator/)**
+
+Or simply open `index.html` in any modern web browser to run it locally.
 
 
 ### Light Mode
