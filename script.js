@@ -59,13 +59,11 @@ function simulate() {
     document.getElementById('eInitial').textContent = eInitial.toFixed(2);
     document.getElementById('eFinal').textContent = eFinal.toFixed(2);
 
-    // Show simulation and results areas
     document.getElementById('simulationArea').classList.remove('hidden');
     document.getElementById('simulationArea').classList.add('flex');
     document.getElementById('resultsArea').classList.remove('hidden');
     document.getElementById('resultsArea').classList.add('flex');
 
-    // Reset collision counter
     collisionCount = 0;
     document.getElementById('collisionCount').textContent = '0';
 
@@ -81,7 +79,7 @@ function simulate() {
         x: canvas.width * 0.25,
         y: canvas.height / 2,
         size: size1,
-        velocity: v1 * 10, // Scale for visualization
+        velocity: v1 * 10,
         initialVelocity: v1 * 10,
         mass: m1,
         color: '#17A2B8',
@@ -92,14 +90,13 @@ function simulate() {
         x: canvas.width * 0.75,
         y: canvas.height / 2,
         size: size2,
-        velocity: v2 * 10, // Scale for visualization
+        velocity: v2 * 10,
         initialVelocity: v2 * 10,
         mass: m2,
         color: '#FD7E14',
         finalVelocity: v2f * 10
     };
 
-    // Start animation
     if (animationId) cancelAnimationFrame(animationId);
     animate();
 }
@@ -107,7 +104,6 @@ function simulate() {
 function animate() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    // Draw center line
     ctx.strokeStyle = '#ddd';
     ctx.lineWidth = 2;
     ctx.setLineDash([5, 5]);
@@ -117,31 +113,25 @@ function animate() {
     ctx.stroke();
     ctx.setLineDash([]);
 
-    // Calculate distance between objects
     const distance = Math.abs(object1.x - object2.x);
 
-    // Check relative velocity to see if objects are approaching each other
     const relativeVelocity = object1.x < object2.x
-        ? object1.velocity - object2.velocity  // object1 on left, approaching if relVel > 0
-        : object2.velocity - object1.velocity; // object1 on right, approaching if relVel > 0
+        ? object1.velocity - object2.velocity
+        : object2.velocity - object1.velocity;
 
     const isApproaching = relativeVelocity > 0;
 
-    // Check for collision between objects - only if approaching
     if (distance <= (object1.size + object2.size) / 2 && isApproaching) {
-        // Increment collision counter
         collisionCount++;
         document.getElementById('collisionCount').textContent = collisionCount;
 
-        // Recalculate collision with current velocities for dynamic collisions
-        const currentV1 = object1.velocity / 10; // Convert back to m/s
+        const currentV1 = object1.velocity / 10;
         const currentV2 = object2.velocity / 10;
         const result = calculateCollision(currentV1, currentV2, object1.mass, object2.mass);
 
         object1.velocity = result.v1f * 10;
         object2.velocity = result.v2f * 10;
 
-        // Separate objects to prevent overlap
         const overlap = (object1.size + object2.size) / 2 - distance;
         if (overlap > 0) {
             if (object1.x < object2.x) {
@@ -154,38 +144,30 @@ function animate() {
         }
     }
 
-    // Update positions
     object1.x += object1.velocity * 0.016;
     object2.x += object2.velocity * 0.016;
 
-    // Boundary collision detection - keep objects inside canvas
-    // Left wall collision for object 1
     if (object1.x - object1.size / 2 < 0) {
         object1.x = object1.size / 2;
-        object1.velocity = -object1.velocity * 0.95; // Reverse with slight energy loss
+        object1.velocity = -object1.velocity * 0.95;
     }
-    // Right wall collision for object 1
     if (object1.x + object1.size / 2 > canvas.width) {
         object1.x = canvas.width - object1.size / 2;
         object1.velocity = -object1.velocity * 0.95;
     }
 
-    // Left wall collision for object 2
     if (object2.x - object2.size / 2 < 0) {
         object2.x = object2.size / 2;
         object2.velocity = -object2.velocity * 0.95;
     }
-    // Right wall collision for object 2
     if (object2.x + object2.size / 2 > canvas.width) {
         object2.x = canvas.width - object2.size / 2;
         object2.velocity = -object2.velocity * 0.95;
     }
 
-    // Draw objects
     drawObject(object1);
     drawObject(object2);
 
-    // Update velocity board with current velocities
     const currentV1Display = (object1.velocity / 10).toFixed(2);
     const currentV2Display = (object2.velocity / 10).toFixed(2);
     document.getElementById('currentV1').textContent = currentV1Display + ' m/s';
@@ -195,19 +177,16 @@ function animate() {
 }
 
 function drawObject(obj) {
-    // Shadow
     ctx.shadowColor = 'rgba(0, 0, 0, 0.2)';
     ctx.shadowBlur = 10;
     ctx.shadowOffsetX = 0;
     ctx.shadowOffsetY = 5;
 
-    // Square
     ctx.fillStyle = obj.color;
     ctx.fillRect(obj.x - obj.size / 2, obj.y - obj.size / 2, obj.size, obj.size);
 
     ctx.shadowColor = 'transparent';
 
-    // Velocity arrow
     const arrowLength = 30;
     const arrowStartX = obj.x + (obj.velocity > 0 ? obj.size / 2 + 10 : -obj.size / 2 - 10);
     const arrowEndX = arrowStartX + (obj.velocity > 0 ? arrowLength : -arrowLength);
@@ -219,7 +198,6 @@ function drawObject(obj) {
     ctx.lineTo(arrowEndX, obj.y);
     ctx.stroke();
 
-    // Arrow head
     const headlen = 8;
     const angle = obj.velocity > 0 ? 0 : Math.PI;
     ctx.beginPath();
@@ -239,7 +217,6 @@ function reset() {
     document.getElementById('m1').value = '';
     document.getElementById('m2').value = '';
 
-    // Hide simulation and results areas
     document.getElementById('simulationArea').classList.add('hidden');
     document.getElementById('simulationArea').classList.remove('flex');
     document.getElementById('resultsArea').classList.add('hidden');
