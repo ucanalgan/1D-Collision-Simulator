@@ -6,9 +6,9 @@ let collisionCount = 0;
 function showError(message) {
     const errorDiv = document.getElementById('error');
     errorDiv.textContent = message;
-    errorDiv.style.display = 'block';
+    errorDiv.classList.remove('hidden');
     setTimeout(() => {
-        errorDiv.style.display = 'none';
+        errorDiv.classList.add('hidden');
     }, 4000);
 }
 
@@ -50,16 +50,20 @@ function simulate() {
     const eInitial = 0.5 * m1 * v1 * v1 + 0.5 * m2 * v2 * v2;
     const eFinal = 0.5 * m1 * v1f * v1f + 0.5 * m2 * v2f * v2f;
 
-    document.getElementById('v1Initial').textContent = v1.toFixed(2) + ' m/s';
-    document.getElementById('v1Final').textContent = v1f.toFixed(2) + ' m/s';
-    document.getElementById('v2Initial').textContent = v2.toFixed(2) + ' m/s';
-    document.getElementById('v2Final').textContent = v2f.toFixed(2) + ' m/s';
-    document.getElementById('pInitial').textContent = pInitial.toFixed(2) + ' kg⋅m/s';
-    document.getElementById('pFinal').textContent = pFinal.toFixed(2) + ' kg⋅m/s';
-    document.getElementById('eInitial').textContent = eInitial.toFixed(2) + ' J';
-    document.getElementById('eFinal').textContent = eFinal.toFixed(2) + ' J';
+    document.getElementById('v1Initial').textContent = v1.toFixed(2);
+    document.getElementById('v1Final').textContent = v1f.toFixed(2);
+    document.getElementById('v2Initial').textContent = v2.toFixed(2);
+    document.getElementById('v2Final').textContent = v2f.toFixed(2);
+    document.getElementById('pInitial').textContent = pInitial.toFixed(2);
+    document.getElementById('pFinal').textContent = pFinal.toFixed(2);
+    document.getElementById('eInitial').textContent = eInitial.toFixed(2);
+    document.getElementById('eFinal').textContent = eFinal.toFixed(2);
 
-    document.getElementById('simulationArea').style.display = 'block';
+    // Show simulation and results areas
+    document.getElementById('simulationArea').classList.remove('hidden');
+    document.getElementById('simulationArea').classList.add('flex');
+    document.getElementById('resultsArea').classList.remove('hidden');
+    document.getElementById('resultsArea').classList.add('flex');
 
     // Reset collision counter
     collisionCount = 0;
@@ -80,7 +84,7 @@ function simulate() {
         velocity: v1 * 10, // Scale for visualization
         initialVelocity: v1 * 10,
         mass: m1,
-        color: '#667eea',
+        color: '#17A2B8',
         finalVelocity: v1f * 10
     };
 
@@ -91,7 +95,7 @@ function simulate() {
         velocity: v2 * 10, // Scale for visualization
         initialVelocity: v2 * 10,
         mass: m2,
-        color: '#f093fb',
+        color: '#FD7E14',
         finalVelocity: v2f * 10
     };
 
@@ -234,7 +238,13 @@ function reset() {
     document.getElementById('v2').value = '';
     document.getElementById('m1').value = '';
     document.getElementById('m2').value = '';
-    document.getElementById('simulationArea').style.display = 'none';
+
+    // Hide simulation and results areas
+    document.getElementById('simulationArea').classList.add('hidden');
+    document.getElementById('simulationArea').classList.remove('flex');
+    document.getElementById('resultsArea').classList.add('hidden');
+    document.getElementById('resultsArea').classList.remove('flex');
+
     if (animationId) {
         cancelAnimationFrame(animationId);
         animationId = null;
