@@ -253,6 +253,6 @@ SOFTWARE.
 
 ## 📧 Contact
 
-Project Link: [https://github.com/ucanalgan/1d-collision-simulator](https://github.com/yourusername/1d-collision-simulator)
+Project Link: [https://github.com/ucanalgan/1d-collision-simulator](https://github.com/ucanalgan/1D-Collision-Simulator)
 
 
